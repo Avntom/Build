@@ -58,7 +58,6 @@ jobs:
           frank/src-tauri/target/release/Frank.exe
           frank/src-tauri/target/release/bundle/nsis/*.exe
         preserve_order: true
-        overwrite_files: false
         draft: false
         prerelease: true
         make_latest: false
