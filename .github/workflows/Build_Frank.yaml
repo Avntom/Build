@@ -20,7 +20,7 @@ jobs:
         cd frank
         npx update-browserslist-db@latest
         pnpm install
-        pnpm run build
+        # pnpm run build
         pnpm run tauri build
 
     - name: Set variables
