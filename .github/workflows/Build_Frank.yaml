@@ -32,7 +32,7 @@ jobs:
       run: |
         cd frank/src
         pnpm install
-        cd..
+        cd ..
         cd frank/src-tauri
         pnpm run tauri build
       env:
