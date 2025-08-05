@@ -1,4 +1,4 @@
-name: Frank
+name: Build Frank
 
 on:
   workflow_dispatch:
