@@ -11,50 +11,30 @@ jobs:
     - name: git clone
       run: |
         git clone -b frankrust https://github.com/Java-S12138/frank
-        
-    # Windows 专用依赖安装
-    - name: Install WebView2
-      run: |
-        # 安装 Tauri 必需的 WebView2 运行时
-        $webview2Url = "https://go.microsoft.com/fwlink/p/?LinkId=2124703"
-        $installerPath = "$env:TEMP\MicrosoftEdgeWebview2Setup.exe"
-        Invoke-WebRequest -Uri $webview2Url -OutFile $installerPath
-        Start-Process -FilePath $installerPath -ArgumentList "/silent /install" -Wait
-        
-    - name: Install Rust
-      run: |
-        # Windows 专用 Rust 安装
-        $rustupUrl = "https://win.rustup.rs/x86_64"
-        $rustupPath = "$env:TEMP\rustup-init.exe"
-        Invoke-WebRequest -Uri $rustupUrl -OutFile $rustupPath
-        Start-Process -FilePath $rustupPath -ArgumentList "-y" -Wait
-        # 设置环境变量
-        $cargoPath = "$env:USERPROFILE\.cargo\bin"
-        echo "$cargoPath" | Out-File -FilePath $env:GITHUB_PATH -Append
-        
-    - name: Install Node.js
-      uses: actions/setup-node@v4
-      with:
-        node-version: '20'
-        architecture: 'x64'
-        
+
     - name: Install pnpm
       run: npm install -g pnpm
-        
-    # Windows 路径处理
+
     - name: Update browserslist database
       run: |
         cd frank
         npx update-browserslist-db@latest
-        
+
     - name: Build Frank
       run: |
         cd frank/src
         pnpm install
-        cd ../src-tauri
+        cd ..
         pnpm run tauri build
-        
+
     - name: Set variables
       run: |
         $date = Get-Date -Format "yyyyMMddHHmm"
         echo "TAG_DATE=$date" | Out-File -FilePath $env:GITHUB_ENV -Append -Encoding utf8
+
+    - name: Upload Build Artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: frank-${{ env.TAG_DATE }}
+        path: |
+          frank/src-tauri/target/release/bundle/nsis/*.exe
