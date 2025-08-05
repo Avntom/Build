@@ -29,7 +29,10 @@ jobs:
       run: npm install -g pnpm
 
     - name: Update browserslist database
-      run: npx update-browserslist-db@latest
+      run: |
+        cd frank
+        npx update-browserslist-db@latest
+        cd ..
 
     - name: Build Frank
       run: |
