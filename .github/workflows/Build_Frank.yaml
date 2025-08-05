@@ -35,3 +35,15 @@ jobs:
         path: |
           frank/src-tauri/target/release/*.exe
           frank/src-tauri/target/release/bundle/nsis/*.exe
+
+    - name: Upload Frank
+      uses: svenstaro/upload-release-action@v2
+      with:
+        repo_token: ${{ secrets.GITHUB_TOKEN }}
+        tag: frank-${{ env.TAG_DATE }}
+        file: |
+          frank/src-tauri/target/release/*.exe
+          frank/src-tauri/target/release/bundle/nsis/*.exe
+        file_glob: true
+        prerelease: true
+        overwrite: false
