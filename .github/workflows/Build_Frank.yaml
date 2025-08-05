@@ -28,15 +28,17 @@ jobs:
     - name: Install pnpm
       run: npm install -g pnpm
 
+    - name: Update browserslist database
+      run: npx update-browserslist-db@latest
+
     - name: Build Frank
       run: |
         cd frank/src
         pnpm install
         cd ../src-tauri
         pnpm run tauri build
-      env:
-        CI: false  # 防止tauri因CI环境报错
 
     - name: Set variables
       run: |
         echo "TAG_DATE=$(date +%Y%m%d%H%M)" >> $GITHUB_ENV
+
