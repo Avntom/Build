@@ -15,6 +15,22 @@ jobs:
       run: |
         git clone -b frankrust https://github.com/Java-S12138/frank
 
+    - name: Install system dependencies
+      run: sudo apt-get install -y libwebkit2gtk-4.0-dev build-essential curl wget libssl-dev libgtk-3-dev
+
+    - name: Install Rust
+      run: |
+        curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+        echo "$HOME/.cargo/bin" >> $GITHUB_PATH
+
+    - name: Install Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+
+    - name: Install pnpm
+      run: npm install -g pnpm
+
     - name: Build Frank
       run: |
         cd frank/src
@@ -23,9 +39,9 @@ jobs:
         cd..
         pnpm run tauri dev
         pnpm run tauri build
-        cd..
+      env:
+        CI: false  # 防止tauri因CI环境报错
 
     - name: Set variables
       run: |
         echo "TAG_DATE=$(date +%Y%m%d%H%M)" >> $GITHUB_ENV
-      shell: bash
