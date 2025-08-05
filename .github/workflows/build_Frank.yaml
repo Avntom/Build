@@ -1,0 +1,31 @@
+name: Frank
+
+env:
+  VERSION: v1.11.4
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: git clone
+      run: |
+        git clone -b frankrust https://github.com/Java-S12138/frank
+
+    - name: Build Frank
+      run: |
+        cd src
+        pnpm install
+        cd src-tauri
+        cd..
+        pnpm run tauri dev
+        pnpm run tauri build
+        cd..
+
+    - name: Set variables
+      run: |
+        echo "TAG_DATE=$(date +%Y%m%d%H%M)" >> $GITHUB_ENV
+      shell: bash
