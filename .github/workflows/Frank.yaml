@@ -1,4 +1,4 @@
-name: Build Frank
+name: Ai
 
 on:
   workflow_dispatch:
