@@ -1,8 +1,5 @@
 name: Frank
 
-env:
-  VERSION: v1.11.4
-
 on:
   workflow_dispatch:
 
@@ -37,8 +34,6 @@ jobs:
         pnpm install
         cd..
         cd frank/src-tauri
-        cd..
-        pnpm run tauri dev
         pnpm run tauri build
       env:
         CI: false  # 防止tauri因CI环境报错
