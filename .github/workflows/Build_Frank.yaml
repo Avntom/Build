@@ -35,7 +35,7 @@ jobs:
       run: |
         cd frank/src
         pnpm install
-        cd src-tauri
+        cd frank/src-tauri
         cd..
         pnpm run tauri dev
         pnpm run tauri build
