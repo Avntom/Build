@@ -1,0 +1,36 @@
+name: 6
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+    - name: git clone
+      run: |
+        git clone -b frankrust https://github.com/Java-S12138/frank
+
+    - name: Install pnpm
+      run: npm install -g pnpm
+
+    - name: Build Frank
+      run: |
+        cd frank
+        npx update-browserslist-db@latest
+        pnpm install
+        pnpm run build
+        pnpm run tauri build
+
+    - name: Set variables
+      run: |
+        $date = Get-Date -Format "yyyyMMddHHmm"
+        echo "TAG_DATE=$date" | Out-File -FilePath $env:GITHUB_ENV -Append -Encoding utf8
+
+    - name: Upload Build Artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: frank-${{ env.TAG_DATE }}
+        path: |
+          frank/src-tauri/target/release/bundle/nsis/*.exe
