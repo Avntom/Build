@@ -8,7 +8,7 @@ defaults:
     shell: bash
 
 jobs:
-  build_caddy_with_naive:
+  build_caddy_with_NT:
     runs-on: ubuntu-22.04
     env:
       BUNDLE: caddy-forwardproxy-naive
