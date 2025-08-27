@@ -27,22 +27,6 @@ jobs:
       - name: Install xcaddy
         run: go install github.com/caddyserver/xcaddy/cmd/xcaddy@latest
 
-      - name: Build for Linux
-        run: |
-          ~/go/bin/xcaddy build \
-            --with github.com/caddyserver/forwardproxy=github.com/klzgrad/forwardproxy@naive \
-            --with github.com/imgk/caddy-trojan \
-            --with github.com/caddy-dns/cloudflare \
-            --output caddy
-
-      - name: Build for Windows
-        run: |
-          ~/go/bin/xcaddy build \
-            --with github.com/caddyserver/forwardproxy=github.com/klzgrad/forwardproxy@naive \
-            --with github.com/imgk/caddy-trojan \
-            --with github.com/caddy-dns/cloudflare \
-            --output caddy.exe 
-
       - name: Set variables
         run: |
           echo "TAG_DATE=$(date +%Y%m%d%H%M)" >> $GITHUB_ENV
