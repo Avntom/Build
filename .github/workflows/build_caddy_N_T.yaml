@@ -12,15 +12,34 @@ jobs:
     runs-on: ubuntu-22.04
     env:
       BUNDLE: caddy-forwardproxy-naive
+
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Go
       - uses: actions/setup-go@v5
         with:
           go-version: ^1.24
-      - run: go install github.com/caddyserver/xcaddy/cmd/xcaddy@latest
-      - run: |
-          ~/go/bin/xcaddy build --with github.com/caddyserver/forwardproxy=github.com/klzgrad/forwardproxy@naive --with github.com/imgk/caddy-trojan --with github.com/caddy-dns/cloudflare --output caddy
-          GOOS=windows GOARCH=amd64 ~/go/bin/xcaddy build --with github.com/caddyserver/forwardproxy=github.com/klzgrad/forwardproxy@naive --with github.com/imgk/caddy-trojan --with github.com/caddy-dns/cloudflare --output caddy.exe
+
+      - name: Install xcaddy
+        run: go install github.com/caddyserver/xcaddy/cmd/xcaddy@latest
+
+       - name: Build for Linux
+        run: |
+          CGO_ENABLED=0 ~/go/bin/xcaddy build \
+            --with github.com/caddyserver/forwardproxy=github.com/klzgrad/forwardproxy@naive \
+            --with github.com/imgk/caddy-trojan \
+            --with github.com/caddy-dns/cloudflare \
+            --output caddy
+
+      - name: Build for Windows
+        run: |
+          CGO_ENABLED=0 GOOS=windows GOARCH=amd64 ~/go/bin/xcaddy build \
+            --with github.com/caddyserver/forwardproxy=github.com/klzgrad/forwardproxy@naive \
+            --with github.com/imgk/caddy-trojan \
+            --with github.com/caddy-dns/cloudflare \
+            --output caddy.exe 
 
       - name: Set variables
         run: |
@@ -28,15 +47,15 @@ jobs:
         shell: bash
 
       - name:  Upload caddy (Linux & Windows)
-        uses: svenstaro/upload-release-action@v2
+        uses: softprops/action-gh-release@v2
         with:
-          repo_token: ${{ secrets.GITHUB_TOKEN }}
-          tag: caddy-${{ env.TAG_DATE }}
-          file: |
+          token: ${{ secrets.GITHUB_TOKEN }}
+          tag_name: caddy-${{ env.TAG_DATE }}
+          name: caddy-${{ env.TAG_DATE }}
+          files: |
             caddy
             caddy.exe
-          asset_name: |
-            caddy
-            caddy.exe
+          preserve_order: true
+          draft: false
           prerelease: true
-          overwrite: false
+          make_latest: false
