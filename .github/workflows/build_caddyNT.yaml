@@ -12,6 +12,8 @@ jobs:
     runs-on: ubuntu-22.04
     env:
       BUNDLE: caddy-forwardproxy-naive
+      ENV_LINUX: CGO_ENABLED=0 GOOS=linux GOARCH=amd64
+      ENV_WINDOWS: CGO_ENABLED=0 GOOS=windows GOARCH=amd64 GOAMD64=v2
 
     steps:
       - name: Checkout code
@@ -27,8 +29,35 @@ jobs:
 
       - name: Build for Linux
         run: |
-          CGO_ENABLED=0 ~/go/bin/xcaddy build \
+          ~/go/bin/xcaddy build \
             --with github.com/caddyserver/forwardproxy=github.com/klzgrad/forwardproxy@naive \
             --with github.com/imgk/caddy-trojan \
             --with github.com/caddy-dns/cloudflare \
             --output caddy
+
+      - name: Build for Windows
+        run: |
+          ~/go/bin/xcaddy build \
+            --with github.com/caddyserver/forwardproxy=github.com/klzgrad/forwardproxy@naive \
+            --with github.com/imgk/caddy-trojan \
+            --with github.com/caddy-dns/cloudflare \
+            --output caddy.exe 
+
+      - name: Set variables
+        run: |
+          echo "TAG_DATE=$(date +%Y%m%d%H%M)" >> $GITHUB_ENV
+        shell: bash
+
+      - name:  Upload caddy (Linux & Windows)
+        uses: softprops/action-gh-release@v2
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          tag_name: caddy-${{ env.TAG_DATE }}
+          name: caddy-${{ env.TAG_DATE }}
+          files: |
+            caddy
+            caddy.exe
+          preserve_order: true
+          draft: false
+          prerelease: true
+          make_latest: false
