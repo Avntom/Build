@@ -1,4 +1,4 @@
-name: Build Caddy NT
+name: Build 1
 
 on:
   workflow_dispatch:
