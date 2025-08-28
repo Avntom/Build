@@ -20,7 +20,7 @@ jobs:
       - run: go install github.com/caddyserver/xcaddy/cmd/xcaddy@latest
       - run: |
           CGO_ENABLED=0 ~/go/bin/xcaddy build --with github.com/caddyserver/forwardproxy=github.com/klzgrad/forwardproxy@naive --with github.com/imgk/caddy-trojan --with github.com/caddy-dns/cloudflare --with github.com/mholt/caddy-l4 --output caddy
-          CGO_ENABLED=0 GOOS=windows GOARCH=amd64 ~/go/bin/xcaddy build --with github.com/caddyserver/forwardproxy=github.com/klzgrad/forwardproxy@naive --with github.com/imgk/caddy-trojan --with github.com/caddy-dns/cloudflare --with github.com/mholt/caddy-l4 --output caddy.exe
+          CGO_ENABLED=0 GOOS=windows GOARCH=amd64 ~/go/bin/xcaddy build --with github.com/caddyserver/forwardproxy=github.com/klzgrad/forwardproxy@naive --with github.com/imgk/caddy-trojan --with github.com/caddy-dns/cloudflare --output caddy.exe
 
       - name: Set variables
         run: |
